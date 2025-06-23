@@ -402,12 +402,9 @@ export default App;
 - When a state changes in regular react app entire component changes.
 - But If we use signal it just changes the specific element that is supposed to change.
 - In nowadays we do not use signals with react. but in Future it will come soon.
-- In vue the signal is called Ref 
-[Signal In Vue](https://vuejs.org/api/reactivity-core.html#ref)
+- In vue the signal is called Ref [Signal In Vue](https://vuejs.org/api/reactivity-core.html#ref)
 - Using Preact we can use the signal but is not that stable
-- The concept of signal came from solid.js
-
-[signal Concept](https://www.solidjs.com/guides/getting-started)
+- The concept of signal came from solid.js [signal Concept](https://www.solidjs.com/guides/getting-started)
 
 ```jsx
 const [first, setFirst] = createSignal("JSON");
@@ -416,3 +413,203 @@ const [last, setLast] = createSignal("Bourne");
 createEffect(() => console.log(`${first()} ${last()}`));
 ```
 - Here first is getter
+
+
+## 20-8 Using Objects as State in React: Gotchas & Best Practices
+- when a input field is not hooked with react state that is called uncontrolled input. Otherwise its controlled.  
+
+```js
+import { useState } from "react";
+
+function App() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({ name, email, phone });
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name</label><br />
+          <input
+            type="text"
+            name="name"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label><br />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="phone">Phone</label><br />
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- lets centralize the user Inputs 
+
+```js 
+import { useState } from "react";
+
+function App() {
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    phone: ""
+  });
+
+  const userInfoUpdate = (value) => {
+    setUserInfo(value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(userInfo);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name</label><br />
+          <input
+            type="text"
+            name="name"
+            id="name"
+            value={userInfo.name}
+            onChange={(e) => userInfoUpdate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label><br />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={userInfo.email}
+            onChange={(e) => userInfoUpdate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="phone">Phone</label><br />
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            value={userInfo.phone}
+            onChange={(e) => userInfoUpdate(e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- There is a problem the objet is being muted by the last value. Means the phone number is replacing the entire object. Mutation is happening. 
+- In Redux we have to deal with this too
+- Lets deal the mutation here. 
+
+```jsx
+import { useState } from "react";
+
+function App() {
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    phone: ""
+  });
+
+  const userInfoUpdate = (input, value) => {
+    setUserInfo({ ...userInfo, [input]: value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(userInfo);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name</label><br />
+          <input
+            type="text"
+            name="name"
+            id="name"
+            value={userInfo.name}
+            onChange={(e) => userInfoUpdate(e.target.name, e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label><br />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={userInfo.email}
+            onChange={(e) => userInfoUpdate(e.target.name, e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="phone">Phone</label><br />
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            value={userInfo.phone}
+            onChange={(e) => userInfoUpdate(e.target.name, e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- basically for this kind of object input fields useReducer is mostly used. Redux used to use useReducer Earlier. 
+
+ 
