@@ -389,3 +389,30 @@ function App() {
 export default App;
 
 ```
+
+## 20-7 What Are Signals? The Future of Reactive State
+
+#### what is signal? 
+- Signal is also a state. Its not just a normal state. rather its a reactive state. 
+- signal is consist of two things 
+  1. Getter 
+  2. Setter 
+- When we take value from a state we call it pure value but In signal we do not get pure value. rather we call `Getter` and the getter gives us the value.
+- The facility of this is called `Fine-Grained Reactivity`. 
+- When a state changes in regular react app entire component changes.
+- But If we use signal it just changes the specific element that is supposed to change.
+- In nowadays we do not use signals with react. but in Future it will come soon.
+- In vue the signal is called Ref 
+[Signal In Vue](https://vuejs.org/api/reactivity-core.html#ref)
+- Using Preact we can use the signal but is not that stable
+- The concept of signal came from solid.js
+
+[signal Concept](https://www.solidjs.com/guides/getting-started)
+
+```jsx
+const [first, setFirst] = createSignal("JSON");
+const [last, setLast] = createSignal("Bourne");
+
+createEffect(() => console.log(`${first()} ${last()}`));
+```
+- Here first is getter
