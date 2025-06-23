@@ -147,3 +147,129 @@ console.log(counter2(5))
 
 - here we can see there is not scope to trace the state.
 - To trace the state we need to declare the count outside the block. Here comes the help of state of react which is handled outside the function and is traced. 
+
+## 20-4 How useState Works Behind the Scenes (Simulated in Vanilla JS)
+
+- Being function base(stateless) how react handles state? lets simulate using vanilla js 
+- Inside if else condition and loop we can not call hooks. Hook Must be in top level of component. 
+- An IIFE (Immediately Invoked Function Expression) is a JavaScript function that runs as soon as it is defined.
+
+```js
+
+const React = (() => {
+    const useState = (initialValue) => {
+        let state = initialValue
+        const setter = (newSate) => {
+            state = newSate
+        }
+        return [state, setter]
+    };
+    return {
+        useState
+    }
+})()
+
+const { useState } = React //export component
+
+// component 
+const Component = () => {
+    const [count, setCount] = useState(1)
+    console.log(count)
+    setCount(2)
+}
+
+Component() // render the component
+
+Component() // gain calling for re render after setting the value
+
+```
+
+- as function is state less we will get 1 not the set value 2 even after 2 times re render. 
+- We just have to handle this state outside the function 
+
+```js 
+
+const React = (() => {
+    let state;
+
+    const useState = (initialValue) => {
+
+        if (state === undefined) {
+            state = initialValue
+        }
+        const setter = (newSate) => {
+            state = newSate
+        }
+        return [state, setter]
+    };
+    return {
+        useState
+    }
+})()
+
+const { useState } = React //export component
+
+// component 
+const Component = () => {
+    const [count, setCount] = useState(1)
+    console.log(count)
+    setCount(2)
+}
+
+Component() // render the component
+
+Component() // gain calling for re render after setting the value
+```
+
+- behind the scene react uses link list to hold multiple state data 
+- Index rest is done after each render in react 
+
+```js
+
+
+const React = (() => {
+    let state = [] // behind the scene react uses link list to hold multiple state data 
+
+    let index = 0;
+
+    const useState = (initialValue) => {
+
+        let hookIndex = index;
+        index++
+
+
+        if (state[hookIndex] === undefined) {
+            state[hookIndex] = initialValue
+        }
+        const setter = (newSate) => {
+            state[hookIndex] = newSate
+        }
+        return [state[hookIndex], setter]
+    };
+
+    const resetIndex = () => {
+        index = 0
+    }
+
+    return {
+        useState,
+        resetIndex
+    }
+})()
+
+const { useState, resetIndex } = React //export component
+
+// component 
+const Component = () => {
+    const [count, setCount] = useState(1)
+    const [name, setName] = useState("Sazid")
+    console.log(count)
+    console.log(name)
+    setCount(2)
+    setName("Mazid")
+}
+
+Component() // render the component
+resetIndex()
+Component() // gain calling for re render after setting the value
+```
