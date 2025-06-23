@@ -279,6 +279,7 @@ Component() // gain calling for re render after setting the value
 - Here we have two phases 
   1. Compares virtual dom with real dom (Diffing Algorithm)
   2. Calculates the difference (called the diff) and builds a list of updates
+
 - Previously stack was used
 
 - Stack (LIFO – Last In, First Out)
@@ -313,3 +314,78 @@ Component() // gain calling for re render after setting the value
    - After the render phase commit phase runs. 
    - Here changes are made inside the dom. 
    - Finally Clear the que
+
+## 20-6 Synchronous vs Asynchronous Behavior of useState
+
+- now lets see how state access the memory 
+
+```jsx
+const [count, setCount] = useState(0)
+```
+
+- Here setCount is synchronous function in react 
+- When we Interact this with a asynchronous function then It Becomes a hassle 
+
+```jsx
+import { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+  const asyncIncrement = () => {
+    setTimeout(() => {
+
+      setCount(count + 1);
+
+    }, 3000);
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={asyncIncrement}>Async Increment</button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- the problem is here that during the setTimeOut Interval it take a value and starts to calculate. in this mean time if we do synchronous increment value is updated but the logic inside the asynchronous function keeps working with the previous value and sets in the state. 
+- We can solve this problem by using callback function. callback function takes the value from the memory directly and we do not provide value directly 
+
+```jsx
+import { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+  const asyncIncrement = () => {
+    setTimeout(() => {
+
+      // using callback
+      setCount((prevCount) => prevCount + 1);
+
+    }, 3000);
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={asyncIncrement}>Async Increment</button>
+    </div>
+  );
+}
+
+export default App;
+
+```
