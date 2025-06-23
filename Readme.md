@@ -26,3 +26,8 @@ Let’s begin by decoding the essence of UI logic — the State.
 3. server state 
 
 - When a user comes to a website and takes action the state changes 
+- In single page application we just have index.htm and <div id=""> </div> inside it content changes because of state changes like different page appears inside the div.
+- React's default state management is not that robust. so fo this reason we use third party state management tool like redux. 
+- Here we can say state is current situation's data. based on the state change different interaction happens. 
+
+## 20-2 How State Triggers Renders in React
