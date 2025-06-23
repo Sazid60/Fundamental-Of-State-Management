@@ -31,3 +31,67 @@ Let’s begin by decoding the essence of UI logic — the State.
 - Here we can say state is current situation's data. based on the state change different interaction happens. 
 
 ## 20-2 How State Triggers Renders in React
+
+#### What is Render? 
+- Render Means Showing something inside browser's frame. Its like we will do something that will trigger browser rendering and show something in our ui
+
+#### What is the relation between state and render? 
+- For each state change correspondingly we need to trigger a render. 
+
+```html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+  <div id="app" class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="flex items-center gap-6 bg-white p-8 rounded-lg shadow-lg">
+      
+      <button id="decrement" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+        Decrement
+      </button>
+
+      <span id="count" class="text-3xl font-bold w-12 text-center">0</span>
+
+      <button id="increment" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+        Increment
+      </button>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+```
+
+
+```js
+let count = 0; // state
+
+const render = () => {
+    document.getElementById("count").innerHTML = count;
+};
+
+const increment = () => {
+    count++;
+    render(); // ← call render after incrementing
+};
+
+const decrement = () => {
+    count--;
+    render(); // ← call render after decrementing
+};
+
+document.getElementById("increment").addEventListener("click", increment);
+document.getElementById("decrement").addEventListener("click", decrement);
+
+// render initially to display the starting count
+render();
+
+
+```
