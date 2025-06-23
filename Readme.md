@@ -273,3 +273,43 @@ Component() // render the component
 resetIndex()
 Component() // gain calling for re render after setting the value
 ```
+
+## 20-5 React Reconciler & Fiber Explained Simply
+- React Core is called reconciler . The work of reconciler is simple like we are giving inputs and the state changes are triggered and the overall executions are done by reconciler. (changes are made using reconciler)
+- Here we have two phases 
+  1. Compares virtual dom with real dom (Diffing Algorithm)
+  2. Calculates the difference (called the diff) and builds a list of updates
+- Previously stack was used
+
+- Stack (LIFO – Last In, First Out)
+  1. The last item added is the first one removed.
+  2. Think of a stack of plates: you add to the top and remove from the top.
+
+- Queue (FIFO – First In, First Out)
+  1. The first item added is the first one removed.
+  2. Think of a queue in a line: the person who comes first gets served first.
+
+- The main problem of stack was it was synchronous. When it was a task of network call it has to wait and synchronous can not perform here. must be asynchronous.
+- Because of being synchronous the problem was reconciler was struggling to render the contents properly 
+- For solving this problem react brought react fiber. 
+
+#### What is fiber? 
+- It simply means unit of work (singular work)
+- Its just a plain object 
+- Now the reconciler became asynchronous
+- Now Fiber Reconciler can do scheduling for us. can set the priority of a task. 
+- When we call a hook it is stored inside fiber
+- When we make a component react makes a fiber node for it. Fiber node is a object and holds a lot of property like(type, memorizeState). links list are stored inside memorizeState. for this reason thinks do not disappeared
+
+#### Fiber Reconciler 
+- Fiber reconciler has two phases 
+
+  1. Render 
+   - all synchronous works are done inside render
+   - When a state changes fiber node becomes dirty that means some changes has came. and then fiber node's _currentExecution(in function based), .update (class component) appended inside the reconciler. Then the update is added inside a que. and this says that the component is added inside the que and need to be rerendered. 
+   - From tracing what is difference between real and actual dom to adding to que is done inside render. 
+
+  2. Commit 
+   - After the render phase commit phase runs. 
+   - Here changes are made inside the dom. 
+   - Finally Clear the que
