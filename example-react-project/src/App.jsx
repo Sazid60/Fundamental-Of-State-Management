@@ -35,6 +35,15 @@ function App() {
           ...state,
           [action.payload.field]: action.payload.value
         };
+      case "RESET":
+        return initialState
+
+      case "CLEAR":
+        return {
+          ...state,
+          [action.payload.field]: ""
+        };
+
       default:
         return state;
     }
@@ -58,6 +67,15 @@ function App() {
       },
     });
   }
+
+  const handleClear = (field) => {
+    dispatch({
+      type: "CLEAR",
+      payload: {
+        field: field,
+      },
+    });
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(userInfo);
@@ -75,6 +93,7 @@ function App() {
             value={userInfo.name}
             onChange={handleOnChange}
           />
+          <button onClick={() => handleClear("name")}>Clear</button>
         </div>
         <div>
           <label htmlFor="email">Email</label><br />
@@ -85,6 +104,7 @@ function App() {
             value={userInfo.email}
             onChange={handleOnChange}
           />
+          <button onClick={() => handleClear("name")}>Clear</button>
         </div>
         <div>
           <label htmlFor="phone">Phone</label><br />
@@ -95,8 +115,10 @@ function App() {
             value={userInfo.phone}
             onChange={handleOnChange}
           />
+          <button onClick={() => handleClear("name")}>Clear</button>
         </div>
         <div>
+          <button onClick={() => dispatch({ type: "RESET" })}>Reset</button>
           <button type="submit">Submit</button>
         </div>
       </form>
