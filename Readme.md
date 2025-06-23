@@ -95,3 +95,55 @@ render();
 
 
 ```
+
+
+## 20-3 React State & Re-Renders: Stateless vs Stateful
+- Lets Understand State Change and render Inside React
+- Chrome Dev Tool -> Components -> settings -> Highlight updates when components render. check this 
+- We can see if a state changes whole react component re render happens. not the specific element 
+
+![alt text](image.png)
+
+- And this is rendered by createRoot 
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+- states, useEffect are hold inside hooks. Hooks are traced using link list inside fiber. 
+- The summary is react renders component when any state changes. 
+- Re render triggering and changing content inside a component is not same thing.
+
+#### Why Fiber is required? 
+- React used to run on class based component. but now a days react uses functional based. 
+- When we work with object oriented programming- object is by default stateful and that means we can keep state inside it. 
+
+```js
+const counter = {
+    count: 0,
+    increment(newCount) {
+        this.count += newCount
+        console.log(this.count)
+    }
+}
+
+counter.increment(1)
+counter.increment(3)
+counter.increment(5)
+```
+
+- Inside Functional programming function is stateless and we can not hold any sate inside it. Function works based on the inputs. 
+
+```js 
+const counter2 = (newCount) =>{
+    let count = 0;
+    return count + newCount
+}
+
+console.log(counter2(1))
+console.log(counter2(3))
+console.log(counter2(5))
+```
+
+- here we can see there is not scope to trace the state.
+- To trace the state we need to declare the count outside the block. Here comes the help of state of react which is handled outside the function and is traced. 
