@@ -854,9 +854,10 @@ function App() {
   }
 
 
-  // takes gives userInfo and dispatch (not a saved function)
-  // takes reducer function and initial arguments 
-  const [userInfo, dispatch] = useReducer(reducer, initialState)
+// Initializes state (userInfo) and dispatch function using useReducer. means gives updated userInfo and  dispatch  (not a saved function) 
+// Takes a reducer function and an initial state value as arguments
+const [userInfo, dispatch] = useReducer(reducer, initialState);
+
 
   console.log(userInfo)
 
